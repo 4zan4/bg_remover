@@ -7,23 +7,25 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      function previewImage(event) {
+      function handleNewUpload(event) {
         const file = event.target.files[0];
         const reader = new FileReader();
 
+        // Show the loading spinner when a new upload is initiated
+        const loadingSpinner = document.getElementById("loading-spinner");
+        loadingSpinner.classList.remove("hidden");
+
+        // Clear the result image when a new upload is initiated
+        const afterImage = document.getElementById("after-image");
+        afterImage.src = ""; // Clear After image
+        afterImage.classList.add("hidden"); // Hide After image
+
+        // Hide the download button while the image is being processed
+        const downloadButton = document.getElementById("download-button");
+        downloadButton.classList.add("hidden");
+
         reader.onload = function () {
-          // Reset previous images
-          const beforeImage = document.getElementById("output-image");
-          const afterImageContainer = document.getElementById("after-image-container");
-          beforeImage.src = ""; // Reset previous preview
-          beforeImage.classList.add("hidden");
-          afterImageContainer.innerHTML = ""; // Clear processed image
-
-          // Set new preview
-          beforeImage.src = reader.result;
-          beforeImage.classList.remove("hidden");
-
-          // Automatically submit the form after previewing
+          // Automatically submit the form after previewing the new image
           document.getElementById("upload-form").submit();
         };
 
@@ -33,22 +35,25 @@
       }
     </script>
   </head>
-  <body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center">
+  <body class="bg-gray-900 min-h-screen flex flex-col items-center justify-center text-white font-mono">
+
+    <!-- Header Section -->
+    <header class="w-full text-center py-12 mb-12 bg-gradient-to-br from-gray-800 to-gray-600 shadow-lg rounded-lg">
+      <h1 class="text-6xl font-extrabold text-gray-200 text-shadow-md">Remove Background from Your Image</h1>
+      <p class="text-2xl mt-4 text-gray-300">Upload an image and get the background removed automatically!</p>
+    </header>
+
     <!-- Upload Section -->
-    <div class="flex items-center justify-center w-full max-w-md mb-10">
-      <form 
-        method="POST" 
-        enctype="multipart/form-data" 
-        class="w-full"
-        id="upload-form">
+    <div class="flex items-center justify-center w-full max-w-lg mb-12">
+      <form method="POST" enctype="multipart/form-data" class="w-full" id="upload-form">
         {% csrf_token %}
         <label
           for="dropzone-file"
-          class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white shadow-md hover:shadow-lg transition hover:bg-gray-100"
+          class="flex flex-col items-center justify-center w-full h-72 border-4 border-dotted border-white rounded-lg cursor-pointer bg-gray-700 bg-opacity-70 hover:bg-opacity-80 transition-all"
         >
           <div class="flex flex-col items-center justify-center pt-5 pb-6">
             <svg
-              class="w-8 h-8 mb-4 text-gray-500"
+              class="w-16 h-16 mb-4 text-white"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -62,46 +67,55 @@
                 d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
               />
             </svg>
-            <p class="mb-2 text-sm text-gray-500">
-              <span class="font-semibold">Click to upload</span> or drag and drop
-            </p>
-            <p class="text-xs text-gray-500">
-              SVG, PNG, JPG or GIF (MAX. 800x400px)
-            </p>
+            <p class="mb-2 text-xl text-white font-bold">Click to upload or drag and drop</p>
+            <p class="text-sm text-gray-400">SVG, PNG, JPG, or GIF (MAX. 800x400px)</p>
           </div>
           <input 
             id="dropzone-file" 
             type="file" 
             name="image" 
             class="hidden" 
-            onchange="previewImage(event)" 
-            required/>
+            onchange="handleNewUpload(event)" 
+            required />
         </label>
       </form>
     </div>
 
-    <!-- Before and After Section -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-4xl">
-      <div class="text-center">
-        <h1 class="text-lg font-semibold text-gray-700 mb-2">Before</h1>
-        <img
-          id="output-image"
-          class="h-auto max-w-full rounded-lg shadow-md hidden"
-          alt="Uploaded Image Preview"
-        />
-      </div>
-      <div class="text-center">
-        <h1 class="text-lg font-semibold text-gray-700 mb-2">After</h1>
-        <div id="after-image-container">
-          {% if output_image %}
-          <img
-            class="h-auto max-w-full rounded-lg shadow-md"
-            src="{{ output_image }}"
-            alt="Processed Image"
-          />
-          {% endif %}
-        </div>
-      </div>
+    <!-- Loading Spinner Section -->
+    <div id="loading-spinner" class="hidden flex items-center justify-center mb-4">
+      <svg class="animate-spin h-12 w-12 mr-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v20m10-10H2"></path>
+      </svg>
+      <span class="text-white text-lg">Processing image...</span>
     </div>
+
+    <!-- After Section (Processed Image) -->
+    <div class="text-center">
+      {% if output_image %}
+        <h2 class="text-3xl font-semibold text-white mb-6 text-shadow-md">Processed Image</h2>
+        <img
+          id="after-image"
+          class="h-auto max-w-full rounded-lg shadow-xl border-4 border-gray-400"
+          src="{{ output_image }}"
+          alt="Processed Image"
+        />
+        <!-- Show Download Button after Image is Processed -->
+        <a
+          id="download-button"
+          href="{{ output_image }}"
+          download="processed_image.png"
+          class="mt-6 inline-block px-10 py-4 bg-gray-600 text-white rounded-xl text-xl font-semibold shadow-lg hover:bg-gray-700 transition-all"
+        >
+          Download Processed Image
+        </a>
+      {% elif error_message %}
+        <div class="text-red-500 text-lg mt-4">{{ error_message }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="w-full text-center py-8 bg-gradient-to-br from-gray-800 to-gray-600 mt-12 shadow-xl rounded-lg">
+      <p class="text-white text-xl font-bold">Created with ❤️ by Jong Papa</p>
+    </footer>
   </body>
 </html>
