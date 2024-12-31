@@ -4,6 +4,8 @@ Remove image backgrounds effortlessly using cutting-edge AI technology! This Dja
 
 ---
 ## 👀 Preview
+![Web Preview](preview/preview-web.gif)
+
 ## ✨ Features  
 
 - 🌈 **Effortless Background Removal**: Upload an image, and the app will remove the background in seconds!  
@@ -54,8 +56,10 @@ Remove image backgrounds effortlessly using cutting-edge AI technology! This Dja
 6. **Open your browser and navigate to: http://127.0.0.1:8000 🌐**
 
 ## 📷 Screenshots
+![Web Sc](preview/scweb.png)
 
 ## 📂 File Structure
+   ```bash
 ai-bg-remover/  
 ├── ai_bg_remover/           # Main Django project folder  
 ├── remover/                 # Background removal app  
