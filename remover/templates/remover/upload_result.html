@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload and Remove Background</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      function previewImage(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function () {
+          // Reset previous images
+          const beforeImage = document.getElementById("output-image");
+          const afterImageContainer = document.getElementById("after-image-container");
+          beforeImage.src = ""; // Reset previous preview
+          beforeImage.classList.add("hidden");
+          afterImageContainer.innerHTML = ""; // Clear processed image
+
+          // Set new preview
+          beforeImage.src = reader.result;
+          beforeImage.classList.remove("hidden");
+
+          // Automatically submit the form after previewing
+          document.getElementById("upload-form").submit();
+        };
+
+        if (file) {
+          reader.readAsDataURL(file);
+        }
+      }
+    </script>
+  </head>
+  <body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center">
+    <!-- Upload Section -->
+    <div class="flex items-center justify-center w-full max-w-md mb-10">
+      <form 
+        method="POST" 
+        enctype="multipart/form-data" 
+        class="w-full"
+        id="upload-form">
+        {% csrf_token %}
+        <label
+          for="dropzone-file"
+          class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white shadow-md hover:shadow-lg transition hover:bg-gray-100"
+        >
+          <div class="flex flex-col items-center justify-center pt-5 pb-6">
+            <svg
+              class="w-8 h-8 mb-4 text-gray-500"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 16"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+              />
+            </svg>
+            <p class="mb-2 text-sm text-gray-500">
+              <span class="font-semibold">Click to upload</span> or drag and drop
+            </p>
+            <p class="text-xs text-gray-500">
+              SVG, PNG, JPG or GIF (MAX. 800x400px)
+            </p>
+          </div>
+          <input 
+            id="dropzone-file" 
+            type="file" 
+            name="image" 
+            class="hidden" 
+            onchange="previewImage(event)" 
+            required/>
+        </label>
+      </form>
+    </div>
+
+    <!-- Before and After Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-4xl">
+      <div class="text-center">
+        <h1 class="text-lg font-semibold text-gray-700 mb-2">Before</h1>
+        <img
+          id="output-image"
+          class="h-auto max-w-full rounded-lg shadow-md hidden"
+          alt="Uploaded Image Preview"
+        />
+      </div>
+      <div class="text-center">
+        <h1 class="text-lg font-semibold text-gray-700 mb-2">After</h1>
+        <div id="after-image-container">
+          {% if output_image %}
+          <img
+            class="h-auto max-w-full rounded-lg shadow-md"
+            src="{{ output_image }}"
+            alt="Processed Image"
+          />
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
