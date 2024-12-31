@@ -56,7 +56,7 @@ Remove image backgrounds effortlessly using cutting-edge AI technology! This Dja
 6. **Open your browser and navigate to: http://127.0.0.1:8000 🌐**
 
 ## 📷 Screenshots
-![Web Sc](preview/scweb.png)
+![](preview/scweb.png)
 
 ## 📂 File Structure
    ```bash
