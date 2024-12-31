@@ -4,7 +4,7 @@ Remove image backgrounds effortlessly using cutting-edge AI technology! This Dja
 
 ---
 ## 👀 Preview
-![Web Preview](preview/preview-web.gif)
+![](https://github.com/4zan4/bg_remover/blob/main/preview/preview%20web.gif)
 
 ## ✨ Features  
 
