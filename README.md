@@ -39,7 +39,7 @@ Remove image backgrounds effortlessly using cutting-edge AI technology! This Dja
 1. **Clone the repository**:  
    ```bash  
    git clone https://github.com/jong4Dev/Django_bg_remover.git
-   cd bg_remover
+   cd Django_bg_remover
 2. **Set up the environment**:
    ```bash
    python -m venv env
