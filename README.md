@@ -38,12 +38,12 @@ Remove image backgrounds effortlessly using cutting-edge AI technology! This Dja
 
 1. **Clone the repository**:  
    ```bash  
-   git clone https://github.com/4zan4/bg_remover.git
+   git clone https://github.com/jong4Dev/Django_bg_remover.git
    cd bg_remover
 2. **Set up the environment**:
    ```bash
-   python -m venv venv
-   source env/bin/activate   # Windows: env\Scripts\activate 
+   python -m venv env
+   env\Scripts\activate 
 3. **Install dependencies**:
    ```bash
    pip install -r requirements.txt  
